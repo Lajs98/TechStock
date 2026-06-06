@@ -6,106 +6,235 @@
 
 <h:head>
     <title>TechStock - Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #1f2937;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar p {
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+
+        .menu-button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-bottom: 5px;
+            color: #111827;
+        }
+
+        .header h3,
+        .header p {
+            margin: 4px 0;
+            color: #4b5563;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .metric-card h2 {
+            margin: 0;
+            font-size: 36px;
+            color: #111827;
+        }
+
+        .metric-card h3 {
+            margin: 0 0 10px 0;
+            color: #374151;
+        }
+
+        .metric-card p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .disponivel {
+            border-left: 6px solid #22c55e;
+        }
+
+        .emuso {
+            border-left: 6px solid #3b82f6;
+        }
+
+        .manutencao {
+            border-left: 6px solid #eab308;
+        }
+
+        .descartado {
+            border-left: 6px solid #ef4444;
+        }
+
+        .geral {
+            border-left: 6px solid #6366f1;
+        }
+    </style>
 </h:head>
 
 <h:body>
 
-    <p:panel header="TechStock - Dashboard">
+    <p:growl id="mensagens"
+             showDetail="true"
+             life="3000" />
 
-        <h2>Bem-vindo, #{loginController.usuarioLogado.nome}</h2>
-        <h3>Perfil: #{loginController.usuarioLogado.perfil}</h3>
+    <div class="layout">
 
-        <p:separator />
+        <aside class="sidebar">
 
-        <h2>Resumo Geral</h2>
+            <h1>TechStock</h1>
+            <p>Inventário de TI</p>
 
-        <p:panelGrid columns="3">
+            <h:form>
 
-            <p:card>
-                <f:facet name="title">Usuários</f:facet>
-                <h1>#{dashboardController.totalUsuarios}</h1>
-                <p>Usuários cadastrados</p>
-            </p:card>
+                <p:button
+                        styleClass="menu-button"
+                        value="Dashboard"
+                        outcome="index"
+                        icon="pi pi-home" />
 
-            <p:card>
-                <f:facet name="title">Equipamentos</f:facet>
-                <h1>#{dashboardController.totalEquipamentos}</h1>
-                <p>Equipamentos cadastrados</p>
-            </p:card>
+                <p:button
+                        styleClass="menu-button"
+                        value="Usuários"
+                        outcome="usuarios"
+                        icon="pi pi-users"
+                        rendered="#{loginController.admin}" />
 
-            <p:card>
-                <f:facet name="title">Movimentações</f:facet>
-                <h1>#{dashboardController.totalMovimentacoes}</h1>
-                <p>Movimentações realizadas</p>
-            </p:card>
+                <p:button
+                        styleClass="menu-button"
+                        value="Equipamentos"
+                        outcome="equipamentos"
+                        icon="pi pi-desktop"
+                        rendered="#{loginController.supervisorOuAdmin}" />
 
-        </p:panelGrid>
+                <p:button
+                        styleClass="menu-button"
+                        value="Movimentações"
+                        outcome="movimentacoes"
+                        icon="pi pi-arrow-right-arrow-left" />
 
-        <p:separator />
+                <p:commandButton
+                        styleClass="menu-button"
+                        value="Sair"
+                        action="#{loginController.logout}"
+                        icon="pi pi-sign-out" />
 
-        <h2>Status dos Equipamentos</h2>
+            </h:form>
 
-        <p:panelGrid columns="4">
+        </aside>
 
-            <p:card>
-                <f:facet name="title">Disponíveis</f:facet>
-                <h1>#{dashboardController.totalDisponiveis}</h1>
-                <p>Prontos para uso</p>
-            </p:card>
+        <main class="content">
 
-            <p:card>
-                <f:facet name="title">Em Uso</f:facet>
-                <h1>#{dashboardController.totalEmUso}</h1>
-                <p>Com colaborador</p>
-            </p:card>
+            <section class="header">
+                <h1>Dashboard</h1>
+                <h3>Bem-vindo, #{loginController.usuarioLogado.nome}</h3>
+                <p>Perfil: #{loginController.usuarioLogado.perfil}</p>
+            </section>
 
-            <p:card>
-                <f:facet name="title">Manutenção</f:facet>
-                <h1>#{dashboardController.totalEmManutencao}</h1>
-                <p>Em manutenção</p>
-            </p:card>
+            <h2>Resumo Geral</h2>
 
-            <p:card>
-                <f:facet name="title">Descartados</f:facet>
-                <h1>#{dashboardController.totalDescartados}</h1>
-                <p>Baixados do estoque</p>
-            </p:card>
+            <section class="cards-grid">
 
-        </p:panelGrid>
+                <div class="metric-card geral">
+                    <h3>Usuários</h3>
+                    <h2>#{dashboardController.totalUsuarios}</h2>
+                    <p>Usuários cadastrados</p>
+                </div>
 
-        <p:separator />
+                <div class="metric-card geral">
+                    <h3>Equipamentos</h3>
+                    <h2>#{dashboardController.totalEquipamentos}</h2>
+                    <p>Equipamentos cadastrados</p>
+                </div>
 
-        <h:form>
+                <div class="metric-card geral">
+                    <h3>Movimentações</h3>
+                    <h2>#{dashboardController.totalMovimentacoes}</h2>
+                    <p>Movimentações realizadas</p>
+                </div>
 
-            <p:button
-                    value="Usuários"
-                    outcome="usuarios"
-                    icon="pi pi-users"
-                    rendered="#{loginController.admin}" />
+            </section>
 
-            <p:button
-                    value="Equipamentos"
-                    outcome="equipamentos"
-                    icon="pi pi-desktop"
-                    rendered="#{loginController.supervisorOuAdmin}" />
+            <h2>Status dos Equipamentos</h2>
 
-            <p:button
-                    value="Movimentações"
-                    outcome="movimentacoes"
-                    icon="pi pi-arrow-right-arrow-left" />
+            <section class="status-grid">
 
-        </h:form>
+                <div class="metric-card disponivel">
+                    <h3>Disponíveis</h3>
+                    <h2>#{dashboardController.totalDisponiveis}</h2>
+                    <p>Prontos para uso</p>
+                </div>
 
-        <p:separator />
+                <div class="metric-card emuso">
+                    <h3>Em Uso</h3>
+                    <h2>#{dashboardController.totalEmUso}</h2>
+                    <p>Com colaborador</p>
+                </div>
 
-        <h:form>
-            <p:commandButton
-                    value="Sair"
-                    action="#{loginController.logout}"
-                    icon="pi pi-sign-out" />
-        </h:form>
+                <div class="metric-card manutencao">
+                    <h3>Manutenção</h3>
+                    <h2>#{dashboardController.totalEmManutencao}</h2>
+                    <p>Em manutenção</p>
+                </div>
 
-    </p:panel>
+                <div class="metric-card descartado">
+                    <h3>Descartados</h3>
+                    <h2>#{dashboardController.totalDescartados}</h2>
+                    <p>Baixados do estoque</p>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
 
 </h:body>
 </html>

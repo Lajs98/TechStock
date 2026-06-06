@@ -3,6 +3,7 @@ package br.com.lsantos.techstock.controller;
 import br.com.lsantos.techstock.entity.Usuario;
 import br.com.lsantos.techstock.enums.PerfilUsuario;
 import br.com.lsantos.techstock.service.UsuarioService;
+import br.com.lsantos.techstock.util.FacesUtil;
 import br.com.lsantos.techstock.util.PermissaoUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
@@ -36,10 +37,10 @@ public class UsuarioController implements Serializable {
     public void salvar() {
         if (usuario.getId() == null) {
             usuarioService.cadastrar(usuario);
-            System.out.println("Usuário cadastrado com sucesso!");
+            FacesUtil.sucesso("Usuário cadastrado com sucesso!");
         } else {
             usuarioService.atualizar(usuario);
-            System.out.println("Usuário atualizado com sucesso!");
+            FacesUtil.sucesso("Usuário atualizado com sucesso!");
         }
 
         usuario = new Usuario();

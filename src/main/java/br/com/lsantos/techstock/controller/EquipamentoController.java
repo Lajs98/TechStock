@@ -5,6 +5,7 @@ import br.com.lsantos.techstock.enums.StatusEquipamento;
 import br.com.lsantos.techstock.enums.TipoEquipamento;
 import br.com.lsantos.techstock.service.EquipamentoService;
 import br.com.lsantos.techstock.service.MovimentacaoService;
+import br.com.lsantos.techstock.util.FacesUtil;
 import br.com.lsantos.techstock.util.SessaoUsuario;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
@@ -44,10 +45,10 @@ public class EquipamentoController implements Serializable {
 
         if (equipamento.getId() == null) {
             equipamentoService.cadastrar(equipamento, SessaoUsuario.getUsuarioLogado());
-            System.out.println("Equipamento cadastrado com sucesso!");
+            FacesUtil.sucesso("Equipamento cadastrado com sucesso!");
         } else {
             equipamentoService.atualizar(equipamento, SessaoUsuario.getUsuarioLogado());
-            System.out.println("Equipamento atualizado com sucesso!");
+            FacesUtil.sucesso("Equipamento atualizado com sucesso!");
         }
 
         equipamento = new Equipamento();
@@ -59,7 +60,7 @@ public class EquipamentoController implements Serializable {
 
     public void excluir(Long id) {
         equipamentoService.excluir(id);
-        System.out.println("Equipamento excluído com sucesso!");
+        FacesUtil.sucesso("Equipamento excluído com sucesso!");
     }
 
     public void descartar(Long id) {
@@ -70,6 +71,7 @@ public class EquipamentoController implements Serializable {
                 SessaoUsuario.getUsuarioLogado(),
                 "Equipamento descartado pelo sistema."
         );
+        FacesUtil.sucesso("Equipamento descartado com sucesso!");
     }
 
     public void limparFiltros() {
