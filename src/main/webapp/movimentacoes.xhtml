@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>TechStock - Movimentações</title>
+</h:head>
+
+<h:body>
+
+    <p:panel header="Registro de Movimentações">
+
+        <h:form>
+
+            <p:panelGrid columns="2">
+
+                <p:outputLabel value="Equipamento:" />
+                <p:selectOneMenu value="#{movimentacaoController.equipamentoId}">
+                    <f:selectItem itemLabel="Selecione" itemValue="#{null}" />
+                    <f:selectItems value="#{movimentacaoController.equipamentos}"
+                                   var="equip"
+                                   itemValue="#{equip.id}"
+                                   itemLabel="#{equip.patrimonio} - #{equip.marca} #{equip.modelo} - #{equip.status}" />
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Tipo de movimentação:" />
+                <p:selectOneMenu value="#{movimentacaoController.tipoMovimentacao}">
+                    <f:selectItem itemLabel="Selecione" itemValue="#{null}" />
+                    <f:selectItems value="#{movimentacaoController.tiposMovimentacao}" />
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Observação:" />
+                <p:inputTextarea value="#{movimentacaoController.observacao}"
+                                 rows="4"
+                                 cols="40" />
+
+            </p:panelGrid>
+
+            <br/>
+
+            <p:commandButton
+                    value="Registrar"
+                    action="#{movimentacaoController.registrar}"
+                    icon="pi pi-check"
+                    ajax="false" />
+
+            <p:button
+                    value="Voltar"
+                    outcome="index"
+                    icon="pi pi-arrow-left" />
+
+        </h:form>
+
+        <p:separator />
+
+        <h2>Histórico de Movimentações</h2>
+
+        <p:dataTable value="#{movimentacaoController.movimentacoes}"
+                     var="mov"
+                     emptyMessage="Nenhuma movimentação registrada.">
+
+            <p:column headerText="ID">
+                <h:outputText value="#{mov.id}" />
+            </p:column>
+
+            <p:column headerText="Patrimônio">
+                <h:outputText value="#{mov.equipamento.patrimonio}" />
+            </p:column>
+
+            <p:column headerText="Tipo">
+                <h:outputText value="#{mov.tipoMovimentacao}" />
+            </p:column>
+
+            <p:column headerText="Usuário">
+                <h:outputText value="#{mov.usuario.nome}" />
+            </p:column>
+
+            <p:column headerText="Observação">
+                <h:outputText value="#{mov.observacao}" />
+            </p:column>
+
+        </p:dataTable>
+
+    </p:panel>
+
+</h:body>
+</html>
