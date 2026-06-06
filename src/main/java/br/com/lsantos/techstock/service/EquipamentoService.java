@@ -1,17 +1,19 @@
 package br.com.lsantos.techstock.service;
 
 import br.com.lsantos.techstock.entity.Equipamento;
+import br.com.lsantos.techstock.entity.Usuario;
 import br.com.lsantos.techstock.enums.StatusEquipamento;
 import br.com.lsantos.techstock.exception.RegraNegocioException;
 import br.com.lsantos.techstock.repository.EquipamentoRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class EquipamentoService {
 
     private final EquipamentoRepository equipamentoRepository = new EquipamentoRepository();
 
-    public void cadastrar(Equipamento equipamento) {
+    public void cadastrar(Equipamento equipamento, Usuario usuarioLogado) {
         validarEquipamento(equipamento);
 
         Equipamento equipamentoPorPatrimonio = equipamentoRepository.buscarPorPatrimonio(equipamento.getPatrimonio());
@@ -26,12 +28,27 @@ public class EquipamentoService {
             throw new RegraNegocioException("Já existe um equipamento com este serial.");
         }
 
+        equipamento.setUsuarioCadastro(usuarioLogado);
+        equipamento.setDataCadastro(LocalDateTime.now());
+
         equipamentoRepository.salvar(equipamento);
     }
 
-    public void atualizar(Equipamento equipamento) {
+    public void atualizar(Equipamento equipamento, Usuario usuarioLogado) {
         validarEquipamento(equipamento);
+
+        equipamento.setUsuarioUltimaAlteracao(usuarioLogado);
+        equipamento.setDataUltimaAlteracao(LocalDateTime.now());
+
         equipamentoRepository.atualizar(equipamento);
+    }
+
+    public void cadastrar(Equipamento equipamento) {
+        cadastrar(equipamento, null);
+    }
+
+    public void atualizar(Equipamento equipamento) {
+        atualizar(equipamento, null);
     }
 
     public void excluir(Long id) {
@@ -44,6 +61,26 @@ public class EquipamentoService {
 
     public List<Equipamento> listarTodos() {
         return equipamentoRepository.listarTodos();
+    }
+
+    public Long contarTodos() {
+        return equipamentoRepository.contarTodos();
+    }
+
+    public void descartar(Long id) {
+        Equipamento equipamento = buscarPorId(id);
+
+        if (equipamento == null) {
+            throw new RegraNegocioException("Equipamento não encontrado.");
+        }
+
+        equipamento.setStatus(StatusEquipamento.DESCARTADO);
+
+        equipamentoRepository.atualizar(equipamento);
+    }
+
+    public Long contarPorStatus(StatusEquipamento status) {
+        return equipamentoRepository.contarPorStatus(status);
     }
 
     private void validarEquipamento(Equipamento equipamento) {
@@ -75,26 +112,4 @@ public class EquipamentoService {
             throw new RegraNegocioException("Status é obrigatório.");
         }
     }
-
-    public Long contarTodos() {
-        return equipamentoRepository.contarTodos();
-    }
-
-    public void descartar(Long id) {
-
-        Equipamento equipamento = buscarPorId(id);
-
-        if (equipamento == null) {
-            throw new RegraNegocioException("Equipamento não encontrado.");
-        }
-
-        equipamento.setStatus(StatusEquipamento.DESCARTADO);
-
-        equipamentoRepository.atualizar(equipamento);
-    }
-
-    public Long contarPorStatus(StatusEquipamento status) {
-        return equipamentoRepository.contarPorStatus(status);
-    }
-
 }

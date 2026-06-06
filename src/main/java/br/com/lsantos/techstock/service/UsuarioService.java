@@ -3,9 +3,9 @@ package br.com.lsantos.techstock.service;
 import br.com.lsantos.techstock.entity.Usuario;
 import br.com.lsantos.techstock.exception.RegraNegocioException;
 import br.com.lsantos.techstock.repository.UsuarioRepository;
+import br.com.lsantos.techstock.util.PasswordUtil;
 
 import java.util.List;
-import br.com.lsantos.techstock.util.PasswordUtil;
 
 public class UsuarioService {
 
@@ -22,6 +22,29 @@ public class UsuarioService {
 
         usuario.setSenha(PasswordUtil.criptografar(usuario.getSenha()));
         usuarioRepository.salvar(usuario);
+    }
+
+    public void atualizar(Usuario usuario) {
+        validarUsuarioEdicao(usuario);
+
+        Usuario usuarioExistente = usuarioRepository.buscarPorEmail(usuario.getEmail());
+
+        if (usuarioExistente != null && !usuarioExistente.getId().equals(usuario.getId())) {
+            throw new RegraNegocioException("Já existe outro usuário cadastrado com este e-mail.");
+        }
+
+        usuarioRepository.atualizar(usuario);
+    }
+
+    public void alterarStatus(Long id) {
+        Usuario usuario = usuarioRepository.buscarPorId(id);
+
+        if (usuario == null) {
+            throw new RegraNegocioException("Usuário não encontrado.");
+        }
+
+        usuario.setAtivo(!usuario.getAtivo());
+        usuarioRepository.atualizar(usuario);
     }
 
     public Usuario buscarPorEmail(String email) {
@@ -58,8 +81,23 @@ public class UsuarioService {
         return usuario;
     }
 
-
     private void validarUsuario(Usuario usuario) {
+        validarCamposBasicos(usuario);
+
+        if (usuario.getSenha() == null || usuario.getSenha().isBlank()) {
+            throw new RegraNegocioException("Senha do usuário é obrigatória.");
+        }
+    }
+
+    private void validarUsuarioEdicao(Usuario usuario) {
+        validarCamposBasicos(usuario);
+
+        if (usuario.getId() == null) {
+            throw new RegraNegocioException("Usuário precisa estar cadastrado para ser editado.");
+        }
+    }
+
+    private void validarCamposBasicos(Usuario usuario) {
         if (usuario == null) {
             throw new RegraNegocioException("Usuário não pode ser nulo.");
         }
@@ -70,10 +108,6 @@ public class UsuarioService {
 
         if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
             throw new RegraNegocioException("E-mail do usuário é obrigatório.");
-        }
-
-        if (usuario.getSenha() == null || usuario.getSenha().isBlank()) {
-            throw new RegraNegocioException("Senha do usuário é obrigatória.");
         }
 
         if (usuario.getPerfil() == null) {

@@ -88,12 +88,32 @@ public class MovimentacaoService {
         movimentacaoRepository.salvar(movimentacao);
     }
 
+    public void registrarDescarte(Equipamento equipamento, Usuario usuario, String observacao) {
+        validarDadosMovimentacao(equipamento, usuario);
+
+        equipamento.setStatus(StatusEquipamento.DESCARTADO);
+        equipamentoRepository.atualizar(equipamento);
+
+        Movimentacao movimentacao = new Movimentacao(
+                equipamento,
+                usuario,
+                TipoMovimentacao.DESCARTE,
+                observacao
+        );
+
+        movimentacaoRepository.salvar(movimentacao);
+    }
+
     public List<Movimentacao> listarTodos() {
         return movimentacaoRepository.listarTodos();
     }
 
     public List<Movimentacao> listarPorEquipamento(Equipamento equipamento) {
         return movimentacaoRepository.listarPorEquipamento(equipamento);
+    }
+
+    public Long contarTodos() {
+        return movimentacaoRepository.contarTodos();
     }
 
     private void validarDadosMovimentacao(Equipamento equipamento, Usuario usuario) {
@@ -112,9 +132,5 @@ public class MovimentacaoService {
         if (usuario.getId() == null) {
             throw new RegraNegocioException("Usuário precisa estar cadastrado antes da movimentação.");
         }
-    }
-
-    public Long contarTodos() {
-        return movimentacaoRepository.contarTodos();
     }
 }

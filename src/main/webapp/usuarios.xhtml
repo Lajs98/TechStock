@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>TechStock - Usuários</title>
+</h:head>
+
+<h:body>
+
+    <p:panel header="Cadastro de Usuários">
+
+        <h:form id="formUsuario">
+
+            <p:panelGrid columns="2">
+
+                <p:outputLabel value="Nome:" />
+                <p:inputText value="#{usuarioController.usuario.nome}" />
+
+                <p:outputLabel value="E-mail:" />
+                <p:inputText value="#{usuarioController.usuario.email}" />
+
+                <p:outputLabel value="Senha:" />
+                <p:password value="#{usuarioController.usuario.senha}" />
+
+                <p:outputLabel value="Perfil:" />
+                <p:selectOneMenu value="#{usuarioController.usuario.perfil}">
+                    <f:selectItem itemLabel="Selecione" itemValue="#{null}" />
+                    <f:selectItems value="#{usuarioController.perfisUsuario}" />
+                </p:selectOneMenu>
+
+            </p:panelGrid>
+
+            <br/>
+
+            <p:commandButton
+                    value="Salvar"
+                    action="#{usuarioController.salvar}"
+                    icon="pi pi-save"
+                    ajax="false" />
+
+            <p:button
+                    value="Voltar"
+                    outcome="index"
+                    icon="pi pi-arrow-left" />
+
+        </h:form>
+
+        <p:separator />
+
+        <h2>Usuários cadastrados</h2>
+
+        <h:form id="formTabelaUsuarios">
+
+            <p:dataTable value="#{usuarioController.usuarios}"
+                         var="user"
+                         emptyMessage="Nenhum usuário cadastrado.">
+
+                <p:column headerText="Nome">
+                    <h:outputText value="#{user.nome}" />
+                </p:column>
+
+                <p:column headerText="E-mail">
+                    <h:outputText value="#{user.email}" />
+                </p:column>
+
+                <p:column headerText="Perfil">
+                    <h:outputText value="#{user.perfil}" />
+                </p:column>
+
+                <p:column headerText="Ativo">
+                    <h:outputText value="#{user.ativo ? 'Sim' : 'Não'}" />
+                </p:column>
+
+                <p:column headerText="Ações">
+
+                    <p:commandButton
+                            value="Editar"
+                            action="#{usuarioController.editar(user)}"
+                            icon="pi pi-pencil"
+                            ajax="false" />
+
+                    <p:commandButton
+                            value="#{user.ativo ? 'Inativar' : 'Ativar'}"
+                            action="#{usuarioController.alterarStatus(user.id)}"
+                            icon="pi pi-power-off"
+                            ajax="false" />
+
+                </p:column>
+
+            </p:dataTable>
+
+        </h:form>
+
+    </p:panel>
+
+</h:body>
+</html>

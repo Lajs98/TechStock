@@ -120,6 +120,22 @@
                     <h:outputText value="#{equip.status}" />
                 </p:column>
 
+                <p:column headerText="Cadastrado Por">
+                    <h:outputText value="#{equip.usuarioCadastro.nome}" />
+                </p:column>
+
+                <p:column headerText="Data Cadastro">
+                    <h:outputText value="#{equip.dataCadastro}" />
+                </p:column>
+
+                <p:column headerText="Última Alteração">
+                    <h:outputText value="#{equip.dataUltimaAlteracao}" />
+                </p:column>
+
+                <p:column headerText="Alterado Por">
+                    <h:outputText value="#{equip.usuarioUltimaAlteracao.nome}" />
+                </p:column>
+
                 <p:column headerText="Ações">
 
                     <p:commandButton

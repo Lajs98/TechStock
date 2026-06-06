@@ -4,6 +4,8 @@ import br.com.lsantos.techstock.entity.Equipamento;
 import br.com.lsantos.techstock.enums.StatusEquipamento;
 import br.com.lsantos.techstock.enums.TipoEquipamento;
 import br.com.lsantos.techstock.service.EquipamentoService;
+import br.com.lsantos.techstock.service.MovimentacaoService;
+import br.com.lsantos.techstock.util.SessaoUsuario;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
@@ -21,14 +23,15 @@ public class EquipamentoController implements Serializable {
     private String termoBusca;
 
     private final EquipamentoService equipamentoService = new EquipamentoService();
+    private final MovimentacaoService movimentacaoService = new MovimentacaoService();
 
     public void salvar() {
 
         if (equipamento.getId() == null) {
-            equipamentoService.cadastrar(equipamento);
+            equipamentoService.cadastrar(equipamento, SessaoUsuario.getUsuarioLogado());
             System.out.println("Equipamento cadastrado com sucesso!");
         } else {
-            equipamentoService.atualizar(equipamento);
+            equipamentoService.atualizar(equipamento, SessaoUsuario.getUsuarioLogado());
             System.out.println("Equipamento atualizado com sucesso!");
         }
 
@@ -45,7 +48,13 @@ public class EquipamentoController implements Serializable {
     }
 
     public void descartar(Long id) {
-        equipamentoService.descartar(id);
+        Equipamento equipamento = equipamentoService.buscarPorId(id);
+
+        movimentacaoService.registrarDescarte(
+                equipamento,
+                SessaoUsuario.getUsuarioLogado(),
+                "Equipamento descartado pelo sistema."
+        );
     }
 
     public void limparFiltros() {

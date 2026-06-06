@@ -37,6 +37,17 @@ public class Equipamento {
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_cadastro_id")
+    private Usuario usuarioCadastro;
+
+    @Column(name = "data_ultima_alteracao")
+    private LocalDateTime dataUltimaAlteracao;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_ultima_alteracao_id")
+    private Usuario usuarioUltimaAlteracao;
+
     public Equipamento() {
     }
 
@@ -108,5 +119,29 @@ public class Equipamento {
 
     public void setDataCadastro(LocalDateTime dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    public Usuario getUsuarioCadastro() {
+        return usuarioCadastro;
+    }
+
+    public void setUsuarioCadastro(Usuario usuarioCadastro) {
+        this.usuarioCadastro = usuarioCadastro;
+    }
+
+    public LocalDateTime getDataUltimaAlteracao() {
+        return dataUltimaAlteracao;
+    }
+
+    public void setDataUltimaAlteracao(LocalDateTime dataUltimaAlteracao) {
+        this.dataUltimaAlteracao = dataUltimaAlteracao;
+    }
+
+    public Usuario getUsuarioUltimaAlteracao() {
+        return usuarioUltimaAlteracao;
+    }
+
+    public void setUsuarioUltimaAlteracao(Usuario usuarioUltimaAlteracao) {
+        this.usuarioUltimaAlteracao = usuarioUltimaAlteracao;
     }
 }

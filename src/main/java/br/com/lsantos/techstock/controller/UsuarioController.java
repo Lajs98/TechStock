@@ -1,0 +1,55 @@
+package br.com.lsantos.techstock.controller;
+
+import br.com.lsantos.techstock.entity.Usuario;
+import br.com.lsantos.techstock.enums.PerfilUsuario;
+import br.com.lsantos.techstock.service.UsuarioService;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Named
+@ViewScoped
+public class UsuarioController implements Serializable {
+
+    private Usuario usuario = new Usuario();
+
+    private final UsuarioService usuarioService = new UsuarioService();
+
+    public void salvar() {
+        if (usuario.getId() == null) {
+            usuarioService.cadastrar(usuario);
+            System.out.println("Usuário cadastrado com sucesso!");
+        } else {
+            usuarioService.atualizar(usuario);
+            System.out.println("Usuário atualizado com sucesso!");
+        }
+
+        usuario = new Usuario();
+    }
+
+    public void editar(Usuario usuarioSelecionado) {
+        this.usuario = usuarioSelecionado;
+    }
+
+    public void alterarStatus(Long id) {
+        usuarioService.alterarStatus(id);
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarioService.listarTodos();
+    }
+
+    public PerfilUsuario[] getPerfisUsuario() {
+        return PerfilUsuario.values();
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+}
