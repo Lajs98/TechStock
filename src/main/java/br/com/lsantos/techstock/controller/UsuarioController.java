@@ -3,6 +3,8 @@ package br.com.lsantos.techstock.controller;
 import br.com.lsantos.techstock.entity.Usuario;
 import br.com.lsantos.techstock.enums.PerfilUsuario;
 import br.com.lsantos.techstock.service.UsuarioService;
+import br.com.lsantos.techstock.util.PermissaoUtil;
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
@@ -16,6 +18,20 @@ public class UsuarioController implements Serializable {
     private Usuario usuario = new Usuario();
 
     private final UsuarioService usuarioService = new UsuarioService();
+
+    @PostConstruct
+    public void verificarPermissao() {
+        if (!PermissaoUtil.isAdmin()) {
+            try {
+                jakarta.faces.context.FacesContext
+                        .getCurrentInstance()
+                        .getExternalContext()
+                        .redirect("index.xhtml");
+            } catch (Exception e) {
+                throw new RuntimeException("Erro ao redirecionar usuário sem permissão.", e);
+            }
+        }
+    }
 
     public void salvar() {
         if (usuario.getId() == null) {

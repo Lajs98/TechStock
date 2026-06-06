@@ -17,23 +17,25 @@
 
         <p:separator />
 
+        <h2>Resumo Geral</h2>
+
         <p:panelGrid columns="3">
 
             <p:card>
                 <f:facet name="title">Usuários</f:facet>
-                <h2>#{dashboardController.totalUsuarios}</h2>
+                <h1>#{dashboardController.totalUsuarios}</h1>
                 <p>Usuários cadastrados</p>
             </p:card>
 
             <p:card>
                 <f:facet name="title">Equipamentos</f:facet>
-                <h2>#{dashboardController.totalEquipamentos}</h2>
+                <h1>#{dashboardController.totalEquipamentos}</h1>
                 <p>Equipamentos cadastrados</p>
             </p:card>
 
             <p:card>
                 <f:facet name="title">Movimentações</f:facet>
-                <h2>#{dashboardController.totalMovimentacoes}</h2>
+                <h1>#{dashboardController.totalMovimentacoes}</h1>
                 <p>Movimentações realizadas</p>
             </p:card>
 
@@ -47,25 +49,25 @@
 
             <p:card>
                 <f:facet name="title">Disponíveis</f:facet>
-                <h2>#{dashboardController.totalDisponiveis}</h2>
+                <h1>#{dashboardController.totalDisponiveis}</h1>
                 <p>Prontos para uso</p>
             </p:card>
 
             <p:card>
                 <f:facet name="title">Em Uso</f:facet>
-                <h2>#{dashboardController.totalEmUso}</h2>
-                <p>Atualmente alocados</p>
+                <h1>#{dashboardController.totalEmUso}</h1>
+                <p>Com colaborador</p>
             </p:card>
 
             <p:card>
                 <f:facet name="title">Manutenção</f:facet>
-                <h2>#{dashboardController.totalEmManutencao}</h2>
+                <h1>#{dashboardController.totalEmManutencao}</h1>
                 <p>Em manutenção</p>
             </p:card>
 
             <p:card>
                 <f:facet name="title">Descartados</f:facet>
-                <h2>#{dashboardController.totalDescartados}</h2>
+                <h1>#{dashboardController.totalDescartados}</h1>
                 <p>Baixados do estoque</p>
             </p:card>
 
@@ -76,9 +78,16 @@
         <h:form>
 
             <p:button
+                    value="Usuários"
+                    outcome="usuarios"
+                    icon="pi pi-users"
+                    rendered="#{loginController.admin}" />
+
+            <p:button
                     value="Equipamentos"
                     outcome="equipamentos"
-                    icon="pi pi-desktop" />
+                    icon="pi pi-desktop"
+                    rendered="#{loginController.supervisorOuAdmin}" />
 
             <p:button
                     value="Movimentações"
@@ -90,12 +99,10 @@
         <p:separator />
 
         <h:form>
-
             <p:commandButton
                     value="Sair"
                     action="#{loginController.logout}"
                     icon="pi pi-sign-out" />
-
         </h:form>
 
     </p:panel>

@@ -5,10 +5,14 @@ import br.com.lsantos.techstock.enums.TipoEquipamento;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "equipamento")
 public class Equipamento {
+
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +63,22 @@ public class Equipamento {
         this.serial = serial;
         this.status = StatusEquipamento.DISPONIVEL;
         this.dataCadastro = LocalDateTime.now();
+    }
+
+    public String getDataCadastroFormatada() {
+        if (dataCadastro == null) {
+            return "";
+        }
+
+        return dataCadastro.format(FORMATTER);
+    }
+
+    public String getDataUltimaAlteracaoFormatada() {
+        if (dataUltimaAlteracao == null) {
+            return "";
+        }
+
+        return dataUltimaAlteracao.format(FORMATTER);
     }
 
     public Long getId() {

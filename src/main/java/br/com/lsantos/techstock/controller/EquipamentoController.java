@@ -8,7 +8,8 @@ import br.com.lsantos.techstock.service.MovimentacaoService;
 import br.com.lsantos.techstock.util.SessaoUsuario;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
-
+import jakarta.annotation.PostConstruct;
+import br.com.lsantos.techstock.util.PermissaoUtil;
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,20 @@ public class EquipamentoController implements Serializable {
 
     private final EquipamentoService equipamentoService = new EquipamentoService();
     private final MovimentacaoService movimentacaoService = new MovimentacaoService();
+
+    @PostConstruct
+    public void verificarPermissao() {
+        if (!PermissaoUtil.isSupervisorOuAdmin()) {
+            try {
+                jakarta.faces.context.FacesContext
+                        .getCurrentInstance()
+                        .getExternalContext()
+                        .redirect("index.xhtml");
+            } catch (Exception e) {
+                throw new RuntimeException("Erro ao redirecionar usuário sem permissão.", e);
+            }
+        }
+    }
 
     public void salvar() {
 

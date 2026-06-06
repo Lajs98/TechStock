@@ -1,6 +1,7 @@
 package br.com.lsantos.techstock.controller;
 
 import br.com.lsantos.techstock.entity.Usuario;
+import br.com.lsantos.techstock.enums.PerfilUsuario;
 import br.com.lsantos.techstock.service.UsuarioService;
 import br.com.lsantos.techstock.util.SessaoUsuario;
 import jakarta.faces.view.ViewScoped;
@@ -18,15 +19,9 @@ public class LoginController implements Serializable {
     private final UsuarioService usuarioService = new UsuarioService();
 
     public String login() {
-
-        Usuario usuario = usuarioService.autenticar(
-                email,
-                senha
-        );
+        Usuario usuario = usuarioService.autenticar(email, senha);
 
         SessaoUsuario.iniciarSessao(usuario);
-
-        System.out.println("Usuário logado: " + usuario.getNome());
 
         return "index?faces-redirect=true";
     }
@@ -34,6 +29,23 @@ public class LoginController implements Serializable {
     public String logout() {
         SessaoUsuario.encerrarSessao();
         return "login?faces-redirect=true";
+    }
+
+    public boolean isAdmin() {
+        Usuario usuario = SessaoUsuario.getUsuarioLogado();
+        return usuario != null && usuario.getPerfil() == PerfilUsuario.ADMIN;
+    }
+
+    public boolean isSupervisorOuAdmin() {
+        Usuario usuario = SessaoUsuario.getUsuarioLogado();
+
+        return usuario != null &&
+                (usuario.getPerfil() == PerfilUsuario.ADMIN ||
+                        usuario.getPerfil() == PerfilUsuario.SUPERVISOR);
+    }
+
+    public Usuario getUsuarioLogado() {
+        return SessaoUsuario.getUsuarioLogado();
     }
 
     public String getEmail() {
@@ -50,9 +62,5 @@ public class LoginController implements Serializable {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public Usuario getUsuarioLogado() {
-        return SessaoUsuario.getUsuarioLogado();
     }
 }
